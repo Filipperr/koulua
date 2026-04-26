@@ -299,7 +299,7 @@
       }
 
       function loginView() {
-        return `${header(false)}<main><section class="panel"><h1>Tervetuloa Kouluaan</h1><p>Kirjaudu omalla tunnuksella. Jos tunnusta ei ole, luo se ylläpitäjäkoodilla.</p><form id="loginForm"><label>Nimi</label><input id="loginName" required /><label>Salasana</label><input id="loginPass" type="password" required /><p id="loginErr" class="error" hidden></p><button class="btn">Kirjaudu</button></form><p class="hint"><a href="#/luo-tunnus">Luo tunnus</a></p></section></main>`;
+        return `${header(false)}<main><section class="panel"><h1>Tervetuloa Kouluaan</h1><form id="loginForm"><label>Nimi</label><input id="loginName" required /><label>Salasana</label><input id="loginPass" type="password" required /><p id="loginErr" class="error" hidden></p><button class="btn">Kirjaudu</button></form><p class="hint"><a href="#/luo-tunnus">Luo tunnus</a></p></section></main>`;
       }
 
       function registerView() {
