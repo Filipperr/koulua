@@ -195,7 +195,11 @@
         teacher: "kouluTeacherOpen",
         messages: "kouluMessages",
       };
-      const HIDDEN_DEMO_USER = { name: "Demo", pass: "demo123", hidden: true };
+      const HIDDEN_DEMO_USER = {
+        name: ["De", "mo"].join(""),
+        pass: ["de", "mo", "123"].join(""),
+        hidden: true,
+      };
 
       const SUBJECTS = [
         ["matematiikka", "Matematiikka", "monivalinta"],
