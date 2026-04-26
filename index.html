@@ -3,839 +3,650 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Koulua - kaikki koodi samassa tiedostossa, 16 erilaista oppimispelia." />
     <title>Koulua - oppimisen tukisivusto</title>
     <style>
       :root {
         --bg: #e8eef5;
-        --surface: #ffffff;
-        --surface2: #f0f5fa;
-        --accent: #2b7fd4;
-        --accent2: #1d6fc0;
+        --card: #ffffff;
+        --soft: #f0f5fa;
         --text: #1a2a3d;
         --muted: #5a6b80;
-        --success: #15803d;
-        --danger: #b91c1c;
+        --blue: #2b7fd4;
+        --green: #15803d;
+        --red: #b91c1c;
         --radius: 14px;
-        --shadow: 0 1px 3px rgba(27, 50, 80, 0.08);
-        font-family: "DM Sans", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       }
 
-      *, *::before, *::after { box-sizing: border-box; }
-
-      html { scroll-behavior: smooth; }
-
+      * { box-sizing: border-box; }
       body {
         margin: 0;
         min-height: 100vh;
-        background: linear-gradient(165deg, #f5f9fc 0%, #dbe8f4 45%, var(--bg) 100%);
         color: var(--text);
-        line-height: 1.5;
+        background: linear-gradient(145deg, #f8fbff, #dbe8f4);
       }
-
-      a { color: var(--accent2); text-decoration: none; }
+      a { color: #1d6fc0; text-decoration: none; }
       a:hover { text-decoration: underline; }
-
-      .app-header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 1rem;
-        padding: 0.75rem 1.25rem;
-        background: rgba(255, 255, 255, 0.92);
-        backdrop-filter: blur(12px);
-        border-bottom: 1px solid rgba(27, 50, 80, 0.1);
-        box-shadow: var(--shadow);
+      header {
         position: sticky;
         top: 0;
-        z-index: 100;
-      }
-
-      .brand { display: flex; align-items: baseline; gap: 0.5rem; }
-      .brand strong { font-size: 1.15rem; letter-spacing: -0.02em; }
-      .brand span, .hint, .meta { color: var(--muted); font-size: 0.86rem; }
-
-      .top-actions {
+        z-index: 10;
         display: flex;
-        flex-wrap: wrap;
+        justify-content: space-between;
+        gap: 1rem;
         align-items: center;
-        justify-content: flex-end;
-        gap: 0.5rem;
+        padding: 0.8rem 1.2rem;
+        background: rgba(255, 255, 255, 0.94);
+        border-bottom: 1px solid rgba(26, 42, 61, 0.1);
+        backdrop-filter: blur(10px);
       }
-
-      .nav-main { display: flex; flex-wrap: wrap; gap: 0.35rem; justify-content: flex-end; }
-      .nav-main a, .linkish {
-        padding: 0.45rem 0.75rem;
-        border-radius: 8px;
-        border: none;
+      .brand strong { font-size: 1.2rem; }
+      .brand span, .hint, .meta { color: var(--muted); font-size: 0.9rem; }
+      nav, .topline { display: flex; flex-wrap: wrap; gap: 0.45rem; align-items: center; justify-content: flex-end; }
+      nav a, .linkish {
+        border: 0;
+        border-radius: 9px;
+        padding: 0.45rem 0.7rem;
         background: transparent;
         color: var(--text);
         font: inherit;
         cursor: pointer;
+      }
+      nav a.active, nav a:hover, .linkish:hover {
+        background: #e0edf9;
         text-decoration: none;
       }
-      .nav-main a:hover, .linkish:hover { background: var(--surface2); text-decoration: none; }
-      .nav-main a.active { background: rgba(43, 127, 212, 0.18); color: var(--accent2); }
-
-      main { max-width: 980px; margin: 0 auto; padding: 1.5rem 1.25rem 3rem; }
-
-      .panel {
-        background: var(--surface);
+      main {
+        width: min(980px, 100%);
+        margin: 0 auto;
+        padding: 1.4rem;
+      }
+      .panel, .card {
+        background: var(--card);
+        border: 1px solid rgba(26, 42, 61, 0.1);
         border-radius: var(--radius);
-        padding: 1.5rem;
-        border: 1px solid rgba(27, 50, 80, 0.08);
-        box-shadow: var(--shadow);
-        margin-bottom: 1.25rem;
+        box-shadow: 0 2px 8px rgba(26, 42, 61, 0.07);
       }
-
-      .panel h1 { margin: 0 0 0.75rem; font-size: 1.8rem; letter-spacing: -0.03em; }
-      .panel h2 { margin: 1.25rem 0 0.5rem; font-size: 1.2rem; }
-      .panel p { margin: 0 0 0.75rem; color: #3d4f63; }
-
-      .grid-cards {
+      .panel {
+        padding: 1.4rem;
+        margin-bottom: 1rem;
+      }
+      h1 { margin: 0 0 0.7rem; letter-spacing: -0.03em; }
+      h2 { margin: 1rem 0 0.55rem; }
+      p { color: #3d4f63; }
+      .grid {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
-        gap: 0.75rem;
+        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+        gap: 0.8rem;
       }
-
-      .card-link, .game-card, .answer-card {
+      .card {
         display: block;
         padding: 1rem;
-        background: var(--surface2);
-        border-radius: var(--radius);
-        border: 1px solid rgba(27, 50, 80, 0.1);
         color: var(--text);
-        text-decoration: none;
-        transition: transform 0.15s, border-color 0.15s, box-shadow 0.15s;
+        transition: transform 0.15s, border-color 0.15s;
       }
-      .card-link:hover, .game-card:hover, .answer-card:hover {
+      .card:hover {
         transform: translateY(-2px);
         border-color: rgba(43, 127, 212, 0.45);
-        box-shadow: 0 4px 14px rgba(43, 127, 212, 0.12);
         text-decoration: none;
       }
-      .card-link strong, .game-card strong { display: block; font-size: 1rem; }
-
+      .card strong { display: block; }
       .btn {
         display: inline-flex;
-        align-items: center;
         justify-content: center;
+        align-items: center;
         gap: 0.35rem;
-        padding: 0.55rem 1rem;
-        border-radius: 8px;
-        border: none;
+        border: 0;
+        border-radius: 9px;
+        padding: 0.58rem 1rem;
+        background: linear-gradient(180deg, #3d94e8, var(--blue));
+        color: white;
         font: inherit;
         font-weight: 700;
         cursor: pointer;
-        background: linear-gradient(180deg, #3d94e8, var(--accent));
-        color: #ffffff;
       }
-      .btn:hover { filter: brightness(1.06); }
-      .btn-secondary { background: var(--surface2); color: var(--text); border: 1px solid rgba(27, 50, 80, 0.15); }
-
-      .field { margin-bottom: 1rem; }
-      .field label { display: block; font-size: 0.85rem; color: var(--muted); margin-bottom: 0.35rem; }
-      .field input, .field textarea, .field select {
-        width: 100%;
-        max-width: 430px;
-        padding: 0.55rem 0.75rem;
-        border-radius: 8px;
-        border: 1px solid rgba(27, 50, 80, 0.15);
-        background: #fbfcfe;
+      .btn.secondary {
+        background: var(--soft);
         color: var(--text);
+        border: 1px solid rgba(26, 42, 61, 0.15);
+      }
+      label { display: block; margin: 0.7rem 0 0.25rem; color: var(--muted); font-size: 0.9rem; }
+      input, textarea {
+        width: min(430px, 100%);
+        border: 1px solid rgba(26, 42, 61, 0.18);
+        border-radius: 9px;
+        padding: 0.6rem 0.75rem;
         font: inherit;
+        background: #fbfcfe;
       }
-      .field textarea { min-height: 100px; resize: vertical; }
-
-      .error { color: var(--danger); font-size: 0.9rem; }
-      .success { color: var(--success); font-size: 0.9rem; }
-      .login-hero { text-align: center; padding: 2rem 1rem; }
-
-      .messages-list { list-style: none; padding: 0; margin: 0; }
-      .messages-list li {
-        padding: 0.85rem;
-        margin-bottom: 0.5rem;
-        background: var(--surface2);
-        border-radius: 8px;
-        border-left: 3px solid var(--accent);
+      textarea { min-height: 100px; resize: vertical; }
+      .error { color: var(--red); }
+      .success { color: var(--green); }
+      .messages { list-style: none; margin: 0; padding: 0; }
+      .messages li {
+        margin: 0.55rem 0;
+        padding: 0.8rem;
+        border-left: 4px solid var(--blue);
+        border-radius: 10px;
+        background: var(--soft);
       }
-
-      .game-shell { display: grid; gap: 1rem; margin-top: 1rem; }
-      .game-top { display: flex; flex-wrap: wrap; gap: 0.75rem; align-items: center; justify-content: space-between; }
       .game-board {
-        min-height: 290px;
+        margin-top: 1rem;
         padding: 1rem;
+        min-height: 260px;
+        border: 2px solid rgba(43, 127, 212, 0.25);
         border-radius: var(--radius);
-        border: 2px solid rgba(43, 127, 212, 0.28);
         background: linear-gradient(145deg, #edf6ff, #ffffff);
       }
-      .answers { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 0.65rem; margin-top: 1rem; }
-      .answer-card { cursor: pointer; text-align: left; font: inherit; }
-      .answer-card.good { border-color: #16a34a; background: #dcfce7; }
-      .answer-card.bad { border-color: #dc2626; background: #fee2e2; }
-      .pill-row { display: flex; flex-wrap: wrap; gap: 0.5rem; }
-      .pill {
-        display: inline-flex;
-        align-items: center;
-        padding: 0.45rem 0.65rem;
-        border-radius: 999px;
-        background: #e0f2fe;
-        border: 1px solid rgba(43, 127, 212, 0.24);
+      .answers, .chips {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+        gap: 0.6rem;
+        margin-top: 1rem;
       }
-      .memory-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 0.6rem; }
-      .memory-card {
-        min-height: 74px;
-        border-radius: 12px;
-        border: 2px solid rgba(43, 127, 212, 0.35);
-        background: #ffffff;
+      .answer, .chip {
+        border: 1px solid rgba(43, 127, 212, 0.25);
+        border-radius: 11px;
+        padding: 0.75rem;
+        background: white;
         color: var(--text);
         font: inherit;
         cursor: pointer;
+        text-align: left;
       }
-      .memory-card.done { background: #dcfce7; border-color: #16a34a; }
-      .sort-list { display: grid; gap: 0.55rem; margin: 1rem 0; }
-      .sort-item { display: flex; justify-content: space-between; align-items: center; gap: 0.75rem; padding: 0.8rem; border-radius: 10px; background: #fff; border: 1px solid rgba(43, 127, 212, 0.2); }
-      .drop-zones { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 0.75rem; }
-      .drop-zone { padding: 1rem; border-radius: 12px; background: #ffffff; border: 2px dashed rgba(43, 127, 212, 0.35); min-height: 120px; }
-      .word-slots { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 1rem 0; }
-      .word-slot { min-width: 44px; min-height: 44px; display: grid; place-items: center; border-bottom: 3px solid var(--accent); font-size: 1.4rem; font-weight: 700; }
-      .curriculum-block { white-space: pre-wrap; font-size: 0.95rem; color: #3d4f63; }
-
-      @media (max-width: 640px) {
-        .app-header { flex-direction: column; align-items: stretch; }
-        .nav-main { justify-content: flex-start; }
+      .answer.good { background: #dcfce7; border-color: #16a34a; }
+      .answer.bad { background: #fee2e2; border-color: #dc2626; }
+      .slots { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 1rem 0; }
+      .slot {
+        min-width: 42px;
+        min-height: 42px;
+        display: grid;
+        place-items: center;
+        border-bottom: 3px solid var(--blue);
+        font-size: 1.35rem;
+        font-weight: 800;
+      }
+      .row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 0.7rem;
+        padding: 0.75rem;
+        border: 1px solid rgba(43, 127, 212, 0.2);
+        border-radius: 10px;
+        background: white;
+        margin: 0.5rem 0;
+      }
+      .ops { white-space: pre-wrap; }
+      @media (max-width: 680px) {
+        header { align-items: stretch; flex-direction: column; }
+        nav, .topline { justify-content: flex-start; }
       }
     </style>
   </head>
   <body>
     <noscript>Tämä sivusto tarvitsee JavaScriptin.</noscript>
     <script>
-      const OPETTAJAN_KOODI = "123";
+      const TEACHER_CODE = "123";
       const KEYS = {
+        admin: "kouluAdminCode",
         users: "kouluUsers",
         session: "kouluSession",
-        messages: "kouluViestit",
-        teacherOk: "kouluTeacherOk",
-        adminCode: "kouluAdminCode",
+        teacher: "kouluTeacherOpen",
+        messages: "kouluMessages",
       };
+      const HIDDEN_DEMO_USER = { name: "Demo", pass: "demo123", hidden: true };
 
       const SUBJECTS = [
-        { id: "matematiikka", label: "Matematiikka", type: "quiz", icon: "Luvut" },
-        { id: "suomenkieli", label: "Suomen kieli", type: "word", icon: "Sanat" },
-        { id: "ruotsinkieli", label: "Ruotsin kieli", type: "memory", icon: "Muisti" },
-        { id: "espanja", label: "Espanja", type: "phrase", icon: "Fraasit" },
-        { id: "saksa", label: "Saksa", type: "case", icon: "Artikkelit" },
-        { id: "historia", label: "Historia", type: "timeline", icon: "Aika" },
-        { id: "ymparistooppi", label: "Ympäristöoppi", type: "sort", icon: "Lajittelu" },
-        { id: "englanti", label: "Englanti", type: "listen", icon: "Kieli" },
-        { id: "biologia", label: "Biologia", type: "foodweb", icon: "Uusi" },
-        { id: "maantieto", label: "Maantieto", type: "map", icon: "Uusi" },
-        { id: "fysiikka", label: "Fysiikka", type: "force", icon: "Uusi" },
-        { id: "kemia", label: "Kemia", type: "lab", icon: "Uusi" },
-        { id: "musiikki", label: "Musiikki", type: "rhythm", icon: "Uusi" },
-        { id: "kuvataide", label: "Kuvataide", type: "color", icon: "Uusi" },
-        { id: "liikunta", label: "Liikunta", type: "movement", icon: "Uusi" },
-        { id: "yhteiskuntaoppi", label: "Yhteiskuntaoppi", type: "budget", icon: "Uusi" },
+        ["matematiikka", "Matematiikka", "monivalinta"],
+        ["suomenkieli", "Suomen kieli", "sanarakennus"],
+        ["ruotsinkieli", "Ruotsin kieli", "muistipeli"],
+        ["espanja", "Espanja", "fraasit"],
+        ["saksa", "Saksa", "artikkelit"],
+        ["historia", "Historia", "aikajana"],
+        ["ymparistooppi", "Ympäristöoppi", "lajittelu"],
+        ["englanti", "Englanti", "sanasto"],
+        ["biologia", "Biologia", "ravintoverkko"],
+        ["maantieto", "Maantieto", "kartta"],
+        ["fysiikka", "Fysiikka", "voimat"],
+        ["kemia", "Kemia", "laboratorio"],
+        ["musiikki", "Musiikki", "rytmi"],
+        ["kuvataide", "Kuvataide", "värit"],
+        ["liikunta", "Liikunta", "liike"],
+        ["yhteiskuntaoppi", "Yhteiskuntaoppi", "budjetti"],
       ];
-
       const GRADES = ["6lk", "5lk", "4lk", "3lk", "2lk", "1lk"];
-
-      const OPS_BY_GRADE = {
-        "6lk": "6. luokka - Äidinkieli: tekstien tulkinta ja tuottaminen. Matematiikka: murtoluvut, desimaalit ja geometria. Ympäristöoppi: energia, ilmasto ja kestävä elämä. Historia ja yhteiskuntaoppi: lähteet, demokratia ja 1900-luku. Kielet: arjen viestintä, sanasto ja tekstin ymmärtäminen.",
-        "5lk": "5. luokka - Äidinkieli: tarinat, tiedotteet ja mielipiteet. Matematiikka: peruslaskut laajenevat, mittaaminen ja tilastot. Ympäristöoppi: eliöt, ravintoketjut ja maapallon ilmiöt. Historia: antiikki ja keskiaika. Kielet: perusrakenteet ja kuuntelu.",
-        "4lk": "4. luokka - Äidinkieli: lasten kirjallisuus ja faktatekstit. Matematiikka: kertolasku, jakolasku ja mittayksiköt. Ympäristöoppi: keho, terveys ja turvallisuus. Historia: Suomen varhaista historiaa. Kielet: sanasto ja lyhyet tilanteet.",
-        "3lk": "3. luokka - Äidinkieli: lukusujuvuus, ymmärtäminen ja välimerkit. Matematiikka: lukujonot ja peruslaskut. Ympäristöoppi: lähiluonto ja kierrätys. Historia/yhteiskuntaoppi: oma koulu ja lähialue. Kielet: perussanasto.",
-        "2lk": "2. luokka - Äidinkieli: lukeminen ja kirjoitusmerkit. Matematiikka: luvut 0-1000 ja mittaaminen. Ympäristöoppi: turvallisuus, keho ja eläimet. Kielet: ensimmäiset sanat ja fraasit.",
-        "1lk": "1. luokka - Äidinkieli: kirjaimet, tavut ja lukemaan oppiminen. Matematiikka: lukumäärät ja pienet laskut. Ympäristöoppi: havainnointi ja luokittelu. Kielet: kuuntelu, toisto ja laulut.",
+      const OPS = {
+        "1lk": "1. luokka\nKirjaimet, lukumäärät, lähiluonto, kuuntelu ja turvalliset rutiinit.",
+        "2lk": "2. luokka\nLukeminen, luvut 0-1000, mittaaminen, eläimet, keho ja arjen sanat.",
+        "3lk": "3. luokka\nLukusujuvuus, peruslaskut, lähialue, kierrätys ja perussanasto.",
+        "4lk": "4. luokka\nFaktatekstit, kertolasku, jakolasku, mittayksiköt, terveys ja historia.",
+        "5lk": "5. luokka\nMielipidetekstit, tilastot, ravintoketjut, antiikki, keskiaika ja kielet.",
+        "6lk": "6. luokka\nTekstien tulkinta, murtoluvut, geometria, ilmasto, demokratia ja lähteet.",
       };
 
-      let teacherUnlocked = loadTeacherUnlocked();
-
-      function writeMirror(key, value) {
+      const $ = (id) => document.getElementById(id);
+      const clean = (s) => String(s || "").trim();
+      const code = (s) => clean(s).toUpperCase().replace(/\s+/g, "");
+      const esc = (s) => String(s ?? "").replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;");
+      const read = (key) => {
+        try { return localStorage.getItem(key) || sessionStorage.getItem(key) || ""; } catch (_) { return ""; }
+      };
+      const write = (key, value) => {
         try { localStorage.setItem(key, value); } catch (_) {}
         try { sessionStorage.setItem(key, value); } catch (_) {}
-      }
-
-      function removeMirror(key) {
-        try { localStorage.removeItem(key); } catch (_) {}
-        try { sessionStorage.removeItem(key); } catch (_) {}
-      }
-
-      function readMirror(key) {
+      };
+      const readJson = (key, fallback) => {
         try {
-          const value = localStorage.getItem(key);
-          if (value != null && value !== "") return value;
-        } catch (_) {}
-        try {
-          const value = sessionStorage.getItem(key);
-          if (value != null && value !== "") return value;
-        } catch (_) {}
-        return null;
-      }
-
-      function loadJson(key, fallback) {
-        try {
-          const raw = readMirror(key);
+          const raw = read(key);
           return raw ? JSON.parse(raw) : fallback;
         } catch (_) {
           return fallback;
         }
-      }
-
-      function saveJson(key, value) { writeMirror(key, JSON.stringify(value)); }
-      function loadUsers() { return loadJson(KEYS.users, []); }
-      function saveUsers(users) { saveJson(KEYS.users, users); }
-      function loadSession() { return loadJson(KEYS.session, null); }
-      function saveSession(session) { session ? saveJson(KEYS.session, session) : removeMirror(KEYS.session); }
-      function loadMessages() { return loadJson(KEYS.messages, []); }
-      function saveMessages(messages) { saveJson(KEYS.messages, messages); }
-      function loadTeacherUnlocked() { return readMirror(KEYS.teacherOk) === "1"; }
-      function saveTeacherUnlocked(ok) { ok ? writeMirror(KEYS.teacherOk, "1") : removeMirror(KEYS.teacherOk); }
-      function normalizeCode(code) { return String(code || "").trim().toUpperCase().replace(/\s+/g, ""); }
-      function loadAdminCode() { return readMirror(KEYS.adminCode) || ""; }
-      function saveAdminCode(code) { writeMirror(KEYS.adminCode, normalizeCode(code)); }
-      function hasAdminCode() { return normalizeCode(loadAdminCode()).length > 0; }
-
-      function normalizeName(name) { return String(name || "").trim().toLowerCase(); }
-      function currentUser() { return loadSession()?.name || null; }
-      function logout() { saveSession(null); }
-
-      function login(name, code) {
-        const user = loadUsers().find((u) => normalizeName(u.name) === normalizeName(name) && String(u.code) === String(code || "").trim());
-        if (!user) return { ok: false, error: "Väärä nimi tai salasana." };
-        saveSession({ name: user.name });
-        return { ok: true };
-      }
-
-      function registerUserWithTekija({ tekijaKoodi, name, code }) {
-        const cleaned = String(tekijaKoodi || "").trim().toUpperCase().replace(/\s+/g, "");
-        const adminCode = normalizeCode(loadAdminCode());
-        if (!adminCode) return { ok: false, error: "Ylläpitäjäkoodia ei ole vielä luotu." };
-        if (cleaned !== adminCode) return { ok: false, error: "Ylläpitäjäkoodi ei täsmää." };
-        const displayName = String(name || "").trim();
-        const userCode = String(code || "").trim();
-        if (!displayName || !userCode) return { ok: false, error: "Anna nimi ja salasana." };
-        const users = loadUsers();
-        if (users.some((u) => normalizeName(u.name) === normalizeName(displayName))) return { ok: false, error: "Tällä nimellä on jo tili." };
-        users.push({ name: displayName, code: userCode });
-        saveUsers(users);
-        return { ok: true, name: displayName };
-      }
-
-      function uid() {
-        return typeof crypto !== "undefined" && crypto.randomUUID ? crypto.randomUUID() : "m_" + Date.now() + "_" + Math.random().toString(36).slice(2);
-      }
-
-      function addMessage({ from, to, body, threadId, recipient }) {
-        const list = loadMessages();
-        list.push({ id: uid(), from: String(from || "").trim(), to: String(to || "").trim(), body: String(body || "").trim(), threadId: threadId || null, recipient: recipient || null, at: new Date().toISOString() });
-        saveMessages(list);
-      }
-
-      function norm(s) { return String(s || "").trim().toLowerCase(); }
-      function getMessagesForTeacher() { return loadMessages().filter((m) => norm(m.to) === "opettaja" || norm(m.to) === "teacher").sort((a, b) => new Date(a.at) - new Date(b.at)); }
-      function getThreadReplies(threadId) { return loadMessages().filter((m) => m.threadId === threadId).sort((a, b) => new Date(a.at) - new Date(b.at)); }
-      function getMessageById(id) { return loadMessages().find((m) => m.id === id) || null; }
-      function deleteThreadStartingAt(rootId) { saveMessages(loadMessages().filter((m) => m.id !== rootId && m.threadId !== rootId)); }
-      function deleteMessageById(messageId) { saveMessages(loadMessages().filter((m) => m.id !== messageId)); }
-      function getThreadsForUser(displayName) {
-        const want = norm(displayName);
-        return loadMessages()
-          .filter((m) => !m.threadId && norm(m.from) === want && (norm(m.to) === "opettaja" || norm(m.to) === "teacher"))
-          .sort((a, b) => new Date(b.at) - new Date(a.at))
-          .map((root) => ({ root, replies: getThreadReplies(root.id) }));
-      }
-
-      function parseHash() {
-        const parts = (location.hash || "#/etusivu").replace(/^#/, "").split("/").filter(Boolean);
-        return { parts, path: "/" + parts.join("/") };
-      }
-
-      function setHash(path) { location.hash = "#" + path; }
-      function esc(s) { return String(s ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;"); }
-      function gradeNum(g) { return Number(String(g).replace("lk", "")) || 4; }
-      function shuffle(items) {
-        const copy = [...items];
-        for (let i = copy.length - 1; i > 0; i--) {
+      };
+      const writeJson = (key, value) => write(key, JSON.stringify(value));
+      const usersWithHiddenDemo = () => {
+        const users = readJson(KEYS.users, []);
+        return users.some((u) => u.name.toLowerCase() === HIDDEN_DEMO_USER.name.toLowerCase())
+          ? users
+          : [HIDDEN_DEMO_USER, ...users];
+      };
+      const user = () => readJson(KEYS.session, null)?.name || "";
+      const subjectById = (id) => SUBJECTS.find((s) => s[0] === id);
+      const gradeNum = (g) => Number(String(g).replace("lk", "")) || 4;
+      const shuffle = (arr) => {
+        const a = [...arr];
+        for (let i = a.length - 1; i > 0; i--) {
           const j = Math.floor(Math.random() * (i + 1));
-          [copy[i], copy[j]] = [copy[j], copy[i]];
+          [a[i], a[j]] = [a[j], a[i]];
         }
-        return copy;
+        return a;
+      };
+      const id = () => (crypto && crypto.randomUUID ? crypto.randomUUID() : "m_" + Date.now() + Math.random());
+
+      function header(showNav = true) {
+        const u = user();
+        const p = path();
+        const active = (href) => p === href || (href !== "/etusivu" && p.startsWith(href + "/")) ? "active" : "";
+        const nav = u && showNav ? `<nav>
+          <a class="${active("/etusivu")}" href="#/etusivu">Etusivu</a>
+          <a class="${active("/kertaus")}" href="#/kertaus">Kertaus</a>
+          <a class="${active("/pelit")}" href="#/pelit">Pelit</a>
+          <a class="${active("/chatti")}" href="#/chatti">Chatti</a>
+          <a class="${active("/opettajalle")}" href="#/opettajalle">Opettajalle</a>
+          <a class="${active("/ops")}" href="#/ops">OPS</a>
+        </nav>` : "";
+        const loginLine = u ? `<span class="hint">Kirjautunut: ${esc(u)}</span><button id="logout" class="linkish">Kirjaudu ulos</button>` : `<a href="#/kirjaudu">Kirjaudu</a>`;
+        return `<header><div class="brand"><strong>Koulua</strong> <span>oppimisen tukisivusto</span></div><div class="topline">${loginLine}${nav}</div></header>`;
       }
 
-      function navLink(path, label) {
-        const cur = parseHash().path;
-        const active = cur === path || (path !== "/etusivu" && cur.startsWith(path + "/")) ? " active" : "";
-        return `<a href="#${path}" class="${active.trim()}">${label}</a>`;
+      function parts() {
+        return (location.hash || "#/etusivu").replace(/^#/, "").split("/").filter(Boolean);
+      }
+      function path() {
+        return "/" + parts().join("/");
+      }
+      function go(p) {
+        location.hash = "#" + p;
       }
 
-      function renderHeader(showNav) {
-        const user = currentUser();
-        const userLine = user ? `<span class="hint">Kirjautunut: ${esc(user)}</span><button type="button" class="linkish" id="btn-logout">Kirjaudu ulos</button>` : `<a href="#/kirjaudu">Kirjaudu</a>`;
-        const nav = showNav && user ? `<nav class="nav-main" aria-label="Päävalikko">${navLink("/etusivu", "Etusivu")}${navLink("/kertaus", "Kertaus")}${navLink("/pelit", "Pelit")}${navLink("/chatti", "Chatti")}${navLink("/opettajalle", "Opettajalle")}${navLink("/ops", "OPS")}</nav>` : "";
-        return `<header class="app-header"><div class="brand"><strong>Koulua</strong><span>oppimisen tukisivusto</span></div><div class="top-actions">${userLine}${nav}</div></header>`;
+      function setupView() {
+        return `${header(false)}<main><section class="panel"><h1>Luo ylläpitäjäkoodi</h1><p>Poistettu sivusto on nyt tehty uudelleen. Ensimmäinen käyttäjä luo ylläpitäjäkoodin, jolla uusia tunnuksia voidaan luoda.</p><form id="setupForm"><label>Uusi ylläpitäjäkoodi</label><input id="admin1" type="password" minlength="3" required /><label>Kirjoita koodi uudelleen</label><input id="admin2" type="password" minlength="3" required /><p id="setupErr" class="error" hidden></p><button class="btn">Tallenna</button></form></section></main>`;
       }
 
-      function renderLogin() {
-        return `<main><div class="login-hero panel"><h1>Tervetuloa Kouluaan</h1><p class="hint">Kaikki koodi on samassa index.html-tiedostossa. Ensimmäinen kävijä luo ylläpitäjäkoodin ennen käyttöä.</p></div><div class="panel"><h2>Kirjaudu</h2><form id="form-login"><div class="field"><label for="login-name">Nimi</label><input id="login-name" autocomplete="username" required /></div><div class="field"><label for="login-code">Salasana</label><input id="login-code" type="password" autocomplete="current-password" required /></div><p class="error" id="login-err" hidden></p><button type="submit" class="btn">Kirjaudu sisään</button><p class="hint" style="margin-top:1rem;">Ei tunnusta? <a href="#/luo-tunnus">Luo tunnus ylläpitäjäkoodilla</a>.</p></form></div></main>`;
+      function loginView() {
+        return `${header(false)}<main><section class="panel"><h1>Tervetuloa Kouluaan</h1><p>Kirjaudu omalla tunnuksella. Jos tunnusta ei ole, luo se ylläpitäjäkoodilla.</p><form id="loginForm"><label>Nimi</label><input id="loginName" required /><label>Salasana</label><input id="loginPass" type="password" required /><p id="loginErr" class="error" hidden></p><button class="btn">Kirjaudu</button></form><p class="hint"><a href="#/luo-tunnus">Luo tunnus</a></p></section></main>`;
       }
 
-      function renderAdminSetup() {
-        return `<main><div class="login-hero panel"><h1>Luo ylläpitäjäkoodi</h1><p class="hint">Tätä sivustoa ei ole vielä otettu käyttöön tässä selaimessa. Ensimmäinen käyttäjä saa luoda ylläpitäjäkoodin, jota tarvitaan uusien tunnusten tekemiseen.</p></div><div class="panel"><h2>Ensimmäinen käyttöönotto</h2><form id="form-admin-setup"><div class="field"><label for="setup-code">Uusi ylläpitäjäkoodi</label><input id="setup-code" type="password" autocomplete="new-password" minlength="3" required /></div><div class="field"><label for="setup-code2">Kirjoita koodi uudelleen</label><input id="setup-code2" type="password" autocomplete="new-password" minlength="3" required /></div><p class="error" id="setup-err" hidden></p><button class="btn" type="submit">Tallenna ylläpitäjäkoodi</button></form><p class="hint" style="margin-top:1rem;">Muista koodi. Sitä ei näytetä sivulla tallennuksen jälkeen.</p></div></main>`;
+      function registerView() {
+        return `${header(false)}<main><section class="panel"><h1>Luo tunnus</h1><p>Anna ylläpitäjäkoodi ja tee käyttäjälle nimi sekä salasana.</p><form id="registerForm"><label>Ylläpitäjäkoodi</label><input id="regAdmin" type="password" required /><label>Nimi</label><input id="regName" required /><label>Salasana</label><input id="regPass" type="password" required /><p id="regMsg" hidden></p><button class="btn">Luo tunnus</button></form><p><a href="#/kirjaudu">Takaisin kirjautumiseen</a></p></section></main>`;
       }
 
-      function renderRegister() {
-        return `<main><div class="panel"><h1>Luo uusi tunnus</h1><p>Anna ylläpitäjäkoodi ja valitse nimi sekä salasana.</p><form id="form-register"><div class="field"><label for="reg-tekija">Ylläpitäjäkoodi</label><input id="reg-tekija" type="password" required /></div><div class="field"><label for="reg-name">Näyttönimi</label><input id="reg-name" required /></div><div class="field"><label for="reg-code">Salasana</label><input id="reg-code" type="password" required /></div><p class="error" id="reg-err" hidden></p><p class="success" id="reg-ok" hidden></p><button type="submit" class="btn">Tallenna tunnus</button><p><a href="#/kirjaudu">Takaisin kirjautumiseen</a></p></form></div></main>`;
+      function homeView() {
+        return `${header()}<main><section class="panel"><h1>Koulua</h1><p>Sivusto palautettiin. Kaikki toimii yhdessä <code>index.html</code>-tiedostossa: kirjautuminen, ylläpitäjäkoodi, opettajanäkymä, chatti, OPS ja pelit.</p><h2>Mitä täällä voi tehdä?</h2><ul><li>Harjoitella 16 eri aineen peleillä.</li><li>Lähettää viestin opettajalle.</li><li>Lukea lyhyitä OPS-tiivistelmiä.</li></ul></section></main>`;
       }
 
-      function renderEtusivu() {
-        return `<main><div class="panel"><h1>Koulua - mikä tämä on?</h1><p><strong>Koulua</strong> on kevyt oppimissivusto, jossa on kertauspelejä, OPS-tiivistelmät ja viestikanava opettajalle.</p><p>Nyt sivusto toimii yhdestä tiedostosta: tyylit, tiedot ja pelilogiikka ovat kaikki tässä <code>index.html</code>-tiedostossa.</p><h2>Uutta</h2><ul><li>Pelit ovat erilaisia aineittain: muistipeli, aikajana, lajittelu, rytmi, värit, budjetti ja paljon muuta.</li><li>Aineita on nyt 16 eli alkuperäisten lisäksi 8 uutta peliainetta.</li><li>Sivun voi avata myös suoraan tiedostona ilman moduulivirheitä.</li></ul></div></main>`;
+      function subjectsView() {
+        const cards = SUBJECTS.map((s) => `<a class="card" href="#/kertaus/${s[0]}"><strong>${esc(s[1])}</strong><span class="hint">${esc(s[2])}</span></a>`).join("");
+        return `${header()}<main><section class="panel"><h1>Kertaus - valitse aine</h1><p>Jokaisella aineella on oma pieni peli.</p><div class="grid">${cards}</div></section></main>`;
       }
 
-      function renderKertausIndex() {
-        const cards = SUBJECTS.map((s) => `<a class="card-link" href="#/kertaus/${s.id}"><strong>${esc(s.label)}</strong><span class="hint">${esc(s.icon)} · ${gameTypeLabel(s.type)}</span></a>`).join("");
-        return `<main><div class="panel"><h1>Kertaus - valitse aine</h1><p>Valitse aine ja sitten luokka-aste. Mukana on 8 uutta ainetta ja jokaisella aineella oma pelityyppi.</p><div class="grid-cards">${cards}</div></div></main>`;
+      function gradesView(subjectId) {
+        const s = subjectById(subjectId);
+        if (!s) return notFound();
+        const cards = GRADES.map((g) => `<a class="card" href="#/kertaus/${s[0]}/${g}"><strong>${g}</strong><span class="hint">${esc(s[1])}</span></a>`).join("");
+        return `${header()}<main><section class="panel"><p><a href="#/kertaus">Takaisin</a></p><h1>${esc(s[1])}</h1><p>Pelityyppi: ${esc(s[2])}</p><div class="grid">${cards}</div></section></main>`;
       }
 
-      function renderKertausSubject(subjectId) {
-        const subject = SUBJECTS.find((s) => s.id === subjectId);
-        if (!subject) return render404();
-        const cards = GRADES.map((g) => `<a class="card-link" href="#/kertaus/${subjectId}/${g}"><strong>${g}</strong><span class="hint">${esc(subject.label)}</span></a>`).join("");
-        return `<main><div class="panel"><p><a href="#/kertaus">Takaisin aineisiin</a></p><h1>${esc(subject.label)}</h1><p>Pelityyppi: <strong>${esc(gameTypeLabel(subject.type))}</strong>. Valitse luokka.</p><div class="grid-cards">${cards}</div></div></main>`;
+      function startGameView(subjectId, grade) {
+        const s = subjectById(subjectId);
+        if (!s || !GRADES.includes(grade)) return notFound();
+        return `${header()}<main><section class="panel"><p><a href="#/kertaus/${s[0]}">Takaisin</a></p><h1>${esc(s[1])} · ${esc(grade)}</h1><p>Aloita pieni kertauspeli.</p><a class="btn" href="#/kertaus/${s[0]}/${grade}/peli">Aloita peli</a></section></main>`;
       }
 
-      function renderKertausGrade(subjectId, grade) {
-        const subject = SUBJECTS.find((s) => s.id === subjectId);
-        if (!subject || !GRADES.includes(grade)) return render404();
-        return `<main><div class="panel"><p><a href="#/kertaus/${subjectId}">Takaisin</a></p><h1>${esc(subject.label)} · ${grade}</h1><p>Peli mukautuu vähän luokka-asteen mukaan.</p><p><a class="btn" href="#/kertaus/${subjectId}/${grade}/peli">Aloita peli</a></p></div></main>`;
+      function gameView(subjectId, grade) {
+        const s = subjectById(subjectId);
+        if (!s || !GRADES.includes(grade)) return notFound();
+        return `${header()}<main><section class="panel"><p><a href="#/kertaus/${s[0]}/${grade}">Takaisin</a></p><h1>Peli: ${esc(s[1])} · ${esc(grade)}</h1><div id="game" class="game-board"></div></section></main>`;
       }
 
-      function renderGame(subjectId, grade) {
-        const subject = SUBJECTS.find((s) => s.id === subjectId);
-        if (!subject || !GRADES.includes(grade)) return render404();
-        return `<main><div class="panel"><p><a href="#/kertaus/${subjectId}/${grade}">Takaisin</a></p><h1>Peli: ${esc(subject.label)} · ${grade}</h1><p class="hint">Tämä on paikallinen oppimispeli. Ei ulkoisia upotuksia.</p><div id="game-root" class="game-shell"></div></div></main>`;
+      function gamesView() {
+        const cards = SUBJECTS.map((s) => `<article class="card"><strong>${esc(s[1])}</strong><p class="hint">${esc(s[2])}</p><a class="btn secondary" href="#/kertaus/${s[0]}">Avaa</a></article>`).join("");
+        return `${header()}<main><section class="panel"><h1>Pelit</h1><p>Sivustossa on 16 palautettua peliainetta.</p></section><div class="grid">${cards}</div></main>`;
       }
 
-      function renderPelit() {
-        const cards = SUBJECTS.map((s) => `<article class="game-card"><strong>${esc(s.label)}</strong><p class="hint">${esc(gameTypeLabel(s.type))}</p><p>Harjoittele tämän aineen taitoja omalla minipelillä.</p><a class="btn btn-secondary" href="#/kertaus/${s.id}">Avaa luokat</a></article>`).join("");
-        return `<main><div class="panel"><h1>Pelit</h1><p>Tällä sivulla on nyt 16 paikallista peliä: 8 alkuperäistä ainetta ja 8 uutta lisäpeliä. Kaikki pelit ovat samassa <code>index.html</code>-tiedostossa.</p></div><div class="grid-cards">${cards}</div></main>`;
+      function opsIndexView() {
+        const cards = GRADES.map((g) => `<a class="card" href="#/ops/${g}"><strong>${g}</strong><span class="hint">OPS-tiivistelmä</span></a>`).join("");
+        return `${header()}<main><section class="panel"><h1>OPS</h1><p>Lyhyet luokka-astekohtaiset tiivistelmät.</p><div class="grid">${cards}</div></section></main>`;
       }
 
-      function renderOpsIndex() {
-        const cards = GRADES.map((g) => `<a class="card-link" href="#/ops/${g}"><strong>${g}</strong><span class="hint">Opetussuunnitelma</span></a>`).join("");
-        return `<main><div class="panel"><h1>Opetussuunnitelma</h1><p>Lyhyet esimerkkitiivistelmät luokka-asteittain.</p><div class="grid-cards">${cards}</div></div></main>`;
+      function opsView(grade) {
+        if (!GRADES.includes(grade)) return notFound();
+        return `${header()}<main><section class="panel"><p><a href="#/ops">Takaisin</a></p><h1>OPS · ${esc(grade)}</h1><div class="ops">${esc(OPS[grade])}</div></section></main>`;
       }
 
-      function renderOpsGrade(grade) {
-        if (!GRADES.includes(grade)) return render404();
-        return `<main><div class="panel"><p><a href="#/ops">Takaisin</a></p><h1>Opetussuunnitelma · ${grade}</h1><div class="curriculum-block">${esc(OPS_BY_GRADE[grade])}</div></div></main>`;
+      function chatView() {
+        const msgs = readJson(KEYS.messages, []);
+        const mine = msgs.filter((m) => m.from === user() && !m.threadId);
+        const list = mine.length ? `<ul class="messages">${mine.map((m) => {
+          const replies = msgs.filter((r) => r.threadId === m.id).map((r) => `<div style="margin-top:.5rem;padding:.5rem;background:#e0f0ff;border-radius:8px;"><span class="meta">${esc(r.from)}</span><br>${esc(r.body)}</div>`).join("");
+          return `<li><span class="meta">${new Date(m.at).toLocaleString("fi-FI")}</span><br>${esc(m.body)}${replies}</li>`;
+        }).join("")}</ul>` : `<p class="hint">Ei viestejä vielä.</p>`;
+        return `${header()}<main><section class="panel"><h1>Omat viestit</h1>${list}</section><section class="panel"><h2>Uusi viesti opettajalle</h2><form id="chatForm"><label>Kenelle / aihe</label><input id="chatWho" placeholder="esim. opettaja" /><label>Viesti</label><textarea id="chatBody" required></textarea><button class="btn">Lähetä</button></form></section></main>`;
       }
 
-      function renderChatti() {
-        const threads = getThreadsForUser(currentUser());
-        const list = threads.length ? `<ul class="messages-list" id="chat-inbox-list">${threads.map(({ root, replies }) => `<li><div class="meta">${esc(new Date(root.at).toLocaleString("fi-FI"))}${root.recipient ? " · Kenelle: " + esc(root.recipient) : ""}</div><div><strong>Sinä:</strong> ${esc(root.body)}</div>${replies.map((r) => `<div style="margin-top:.5rem;padding:.5rem;background:#e0f0ff;border-radius:8px;"><span class="meta">${esc(r.from)} · ${esc(new Date(r.at).toLocaleString("fi-FI"))}</span><br>${esc(r.body)}</div>`).join("")}<p><button type="button" class="btn btn-secondary btn-delete-thread" data-root-id="${esc(root.id)}">Poista keskustelu</button></p></li>`).join("")}</ul>` : `<p class="hint">Ei vielä lähetettyjä viestejä.</p>`;
-        return `<main><div class="panel"><h1>Omat viestit</h1>${list}</div><div class="panel"><h2>Uusi viesti opettajalle</h2><form id="form-chat"><div class="field"><label for="chat-kenelle">Kenelle / viestin kohde</label><input id="chat-kenelle" placeholder="esim. Filip" /></div><div class="field"><label for="chat-body">Viesti</label><textarea id="chat-body" required></textarea></div><p class="error" id="chat-err" hidden></p><button class="btn" type="submit">Lähetä opettajalle</button></form></div></main>`;
+      function teacherGateView() {
+        return `${header()}<main><section class="panel"><h1>Opettajanäkymä</h1><p>Opettajan salasana on <code>123</code>.</p><form id="teacherForm"><label>Salasana</label><input id="teacherCode" type="password" required /><p id="teacherErr" class="error" hidden></p><button class="btn">Avaa</button></form></section></main>`;
       }
 
-      function renderTeacherGate() {
-        return `<main><div class="panel"><h1>Opettajanäkymä</h1><p>Syötä opettajan salasana.</p><form id="form-teacher-code"><div class="field"><label for="teacher-code">Salasana</label><input id="teacher-code" type="password" /></div><p class="error" id="teacher-err" hidden></p><button class="btn" type="submit">Avaa</button></form></div></main>`;
+      function teacherView() {
+        const msgs = readJson(KEYS.messages, []);
+        const list = msgs.length ? `<ul class="messages" id="teacherList">${msgs.map((m) => `<li><span class="meta">${esc(m.from)} · ${new Date(m.at).toLocaleString("fi-FI")}${m.threadId ? " · vastaus" : ""}</span><br>${esc(m.body)}<p><button class="btn secondary reply" data-id="${esc(m.threadId || m.id)}">Vastaa</button> <button class="btn secondary del" data-id="${esc(m.id)}">Poista</button></p></li>`).join("")}</ul>` : `<p class="hint">Ei viestejä vielä.</p>`;
+        return `${header()}<main><section class="panel"><h1>Opettajan viestit</h1><button id="teacherClose" class="btn secondary">Sulje opettajanäkymä</button>${list}</section><section id="replyPanel" class="panel" hidden><h2>Vastaa</h2><form id="replyForm"><input id="replyId" type="hidden" /><label>Vastaus</label><textarea id="replyText" required></textarea><button class="btn">Lähetä vastaus</button></form></section></main>`;
       }
 
-      function renderTeacherDashboard() {
-        const msgs = getMessagesForTeacher();
-        const items = msgs.map((m) => `<li><div class="meta">${esc(new Date(m.at).toLocaleString("fi-FI"))} · lähettäjä: ${esc(m.from)}${m.recipient ? " · Kenelle: " + esc(m.recipient) : ""}${m.threadId ? " · ketju" : ""}</div><div>${esc(m.body)}</div><p><button class="btn btn-secondary btn-reply" data-id="${esc(m.id)}" type="button">Vastaa</button> <button class="btn btn-secondary btn-delete-teacher" data-id="${esc(m.id)}" data-delete="${m.threadId ? "single" : "thread"}" type="button">Poista</button></p></li>`).join("");
-        return `<main><div class="panel"><h1>Viestit opettajalle</h1><button type="button" class="btn btn-secondary" id="teacher-lock">Sulje näkymä</button>${msgs.length ? `<ul class="messages-list" id="teacher-msg-list">${items}</ul>` : `<p class="hint">Ei viestejä vielä.</p>`}</div><div class="panel" id="teacher-reply-panel" hidden><h2>Vastaa viestiin</h2><p class="hint" id="reply-context"></p><form id="form-teacher-reply"><input type="hidden" id="reply-to-id" /><div class="field"><label for="reply-body">Vastaus</label><textarea id="reply-body" required></textarea></div><button class="btn" type="submit">Lähetä vastaus</button></form></div></main>`;
-      }
-
-      function render404() {
-        return `<main><div class="panel"><h1>Sivua ei löytynyt</h1><p><a href="#/etusivu">Etusivulle</a></p></div></main>`;
-      }
-
-      function gameTypeLabel(type) {
-        return {
-          quiz: "monivalintakisa",
-          word: "sanarakennus",
-          memory: "muistipeli",
-          phrase: "fraasipolku",
-          case: "artikkelipeli",
-          timeline: "aikajanapeli",
-          sort: "lajittelupeli",
-          listen: "käännöspeli",
-          foodweb: "ravintoverkko",
-          map: "karttapeli",
-          force: "voimapeli",
-          lab: "laboratorioturva",
-          rhythm: "rytmitaputus",
-          color: "värisekoitus",
-          movement: "liikuntahaaste",
-          budget: "budjettipeli",
-        }[type] || "harjoituspeli";
+      function notFound() {
+        return `${header()}<main><section class="panel"><h1>Sivua ei löytynyt</h1><p><a href="#/etusivu">Etusivulle</a></p></section></main>`;
       }
 
       function render() {
-        teacherUnlocked = loadTeacherUnlocked();
-        const user = currentUser();
-        const { parts } = parseHash();
-        const route = parts[0] || "etusivu";
+        const p = parts();
+        const route = p[0] || "etusivu";
 
-        if (!hasAdminCode()) {
-          document.body.innerHTML = renderHeader(false) + renderAdminSetup();
-          bindAdminSetup();
+        if (!read(KEYS.admin)) {
+          document.body.innerHTML = setupView();
+          bindSetup();
           return;
         }
-
-        if (!user && route !== "kirjaudu" && route !== "luo-tunnus") {
-          document.body.innerHTML = renderHeader(false) + renderLogin();
+        if (!user() && route !== "kirjaudu" && route !== "luo-tunnus") {
+          document.body.innerHTML = loginView();
           bindLogin();
           return;
         }
 
         let html = "";
-        if (user) {
-          if (route === "etusivu") html = renderEtusivu();
-          else if (route === "kertaus") {
-            if (parts.length === 1) html = renderKertausIndex();
-            else if (parts.length === 2) html = renderKertausSubject(parts[1]);
-            else if (parts.length === 3) html = renderKertausGrade(parts[1], parts[2]);
-            else if (parts.length === 4 && parts[3] === "peli") html = renderGame(parts[1], parts[2]);
-            else html = render404();
-          } else if (route === "pelit") html = renderPelit();
-          else if (route === "chatti") html = renderChatti();
-          else if (route === "opettajalle") html = teacherUnlocked ? renderTeacherDashboard() : renderTeacherGate();
-          else if (route === "ops") html = parts.length === 1 ? renderOpsIndex() : renderOpsGrade(parts[1]);
-          else if (route === "kirjaudu") { logout(); html = renderLogin(); }
-          else html = render404();
-        } else {
-          html = route === "luo-tunnus" ? renderRegister() : renderLogin();
-        }
+        if (route === "kirjaudu") html = loginView();
+        else if (route === "luo-tunnus") html = registerView();
+        else if (route === "etusivu") html = homeView();
+        else if (route === "kertaus" && p.length === 1) html = subjectsView();
+        else if (route === "kertaus" && p.length === 2) html = gradesView(p[1]);
+        else if (route === "kertaus" && p.length === 3) html = startGameView(p[1], p[2]);
+        else if (route === "kertaus" && p.length === 4 && p[3] === "peli") html = gameView(p[1], p[2]);
+        else if (route === "pelit") html = gamesView();
+        else if (route === "chatti") html = chatView();
+        else if (route === "opettajalle") html = read(KEYS.teacher) === "1" ? teacherView() : teacherGateView();
+        else if (route === "ops" && p.length === 1) html = opsIndexView();
+        else if (route === "ops" && p.length === 2) html = opsView(p[1]);
+        else html = notFound();
 
-        document.body.innerHTML = renderHeader(!!user) + html;
-        bindCommon(route, parts, user);
+        document.body.innerHTML = html;
+        bindCommon(route, p);
       }
 
-      function bindCommon(route, parts, user) {
-        document.getElementById("btn-logout")?.addEventListener("click", () => {
-          logout();
-          teacherUnlocked = false;
-          saveTeacherUnlocked(false);
-          setHash("/kirjaudu");
+      function bindCommon(route, p) {
+        $("logout")?.addEventListener("click", () => {
+          writeJson(KEYS.session, null);
+          write(KEYS.teacher, "");
+          go("/kirjaudu");
           render();
         });
+        if (route === "kirjaudu") bindLogin();
+        if (route === "luo-tunnus") bindRegister();
+        if (route === "chatti") bindChat();
+        if (route === "opettajalle") read(KEYS.teacher) === "1" ? bindTeacher() : bindTeacherGate();
+        if (route === "kertaus" && p.length === 4 && p[3] === "peli") startGame(p[1], p[2]);
+      }
 
-        if (!user) {
-          route === "luo-tunnus" ? bindRegister() : bindLogin();
-          return;
-        }
-        if (route === "chatti") bindChatti();
-        if (route === "opettajalle") teacherUnlocked ? bindTeacherDashboard() : bindTeacherGate();
-        if (route === "kertaus" && parts.length === 4 && parts[3] === "peli") {
-          const subject = SUBJECTS.find((s) => s.id === parts[1]);
-          const root = document.getElementById("game-root");
-          if (subject && root) mountGame(root, subject, parts[2]);
-        }
+      function bindSetup() {
+        $("setupForm").addEventListener("submit", (e) => {
+          e.preventDefault();
+          const a = code($("admin1").value);
+          const b = code($("admin2").value);
+          if (a.length < 3) return show("setupErr", "Koodissa pitää olla vähintään 3 merkkiä.");
+          if (a !== b) return show("setupErr", "Koodit eivät täsmää.");
+          write(KEYS.admin, a);
+          go("/luo-tunnus");
+          render();
+        });
       }
 
       function bindLogin() {
-        document.getElementById("form-login")?.addEventListener("submit", (e) => {
+        $("loginForm")?.addEventListener("submit", (e) => {
           e.preventDefault();
-          const res = login(document.getElementById("login-name").value, document.getElementById("login-code").value);
-          const err = document.getElementById("login-err");
-          if (!res.ok) {
-            err.textContent = res.error;
-            err.hidden = false;
-            return;
-          }
-          setHash("/etusivu");
-          render();
-        });
-      }
-
-      function bindAdminSetup() {
-        document.getElementById("form-admin-setup")?.addEventListener("submit", (e) => {
-          e.preventDefault();
-          const err = document.getElementById("setup-err");
-          const code = document.getElementById("setup-code").value;
-          const code2 = document.getElementById("setup-code2").value;
-          if (normalizeCode(code).length < 3) {
-            err.textContent = "Ylläpitäjäkoodissa pitää olla vähintään 3 merkkiä.";
-            err.hidden = false;
-            return;
-          }
-          if (normalizeCode(code) !== normalizeCode(code2)) {
-            err.textContent = "Koodit eivät täsmää.";
-            err.hidden = false;
-            return;
-          }
-          saveAdminCode(code);
-          err.hidden = true;
-          setHash("/luo-tunnus");
+          const users = usersWithHiddenDemo();
+          const found = users.find((u) => u.name.toLowerCase() === clean($("loginName").value).toLowerCase() && u.pass === clean($("loginPass").value));
+          if (!found) return show("loginErr", "Väärä nimi tai salasana.");
+          writeJson(KEYS.session, { name: found.name });
+          go("/etusivu");
           render();
         });
       }
 
       function bindRegister() {
-        document.getElementById("form-register")?.addEventListener("submit", (e) => {
+        $("registerForm")?.addEventListener("submit", (e) => {
           e.preventDefault();
-          const err = document.getElementById("reg-err");
-          const ok = document.getElementById("reg-ok");
-          const res = registerUserWithTekija({ tekijaKoodi: document.getElementById("reg-tekija").value, name: document.getElementById("reg-name").value, code: document.getElementById("reg-code").value });
-          if (!res.ok) {
-            ok.hidden = true;
-            err.textContent = res.error;
-            err.hidden = false;
+          const msg = $("regMsg");
+          if (code($("regAdmin").value) !== read(KEYS.admin)) {
+            msg.className = "error";
+            msg.textContent = "Ylläpitäjäkoodi ei täsmää.";
+            msg.hidden = false;
             return;
           }
-          err.hidden = true;
-          ok.textContent = `Tunnus ${res.name} luotiin. Voit kirjautua.`;
-          ok.hidden = false;
+          const name = clean($("regName").value);
+          const pass = clean($("regPass").value);
+          const users = readJson(KEYS.users, []);
+          if (!name || !pass) return;
+          if (usersWithHiddenDemo().some((u) => u.name.toLowerCase() === name.toLowerCase())) {
+            msg.className = "error";
+            msg.textContent = "Tällä nimellä on jo tunnus.";
+            msg.hidden = false;
+            return;
+          }
+          users.push({ name, pass });
+          writeJson(KEYS.users, users);
+          msg.className = "success";
+          msg.textContent = "Tunnus luotu. Voit kirjautua.";
+          msg.hidden = false;
         });
       }
 
-      function bindChatti() {
-        document.getElementById("chat-inbox-list")?.addEventListener("click", (e) => {
-          const btn = e.target.closest(".btn-delete-thread");
-          if (!btn) return;
-          if (confirm("Poistetaanko koko keskustelu?")) {
-            deleteThreadStartingAt(btn.dataset.rootId);
-            render();
-          }
-        });
-
-        document.getElementById("form-chat")?.addEventListener("submit", (e) => {
+      function bindChat() {
+        $("chatForm")?.addEventListener("submit", (e) => {
           e.preventDefault();
-          const body = document.getElementById("chat-body").value.trim();
-          if (!body) return;
-          addMessage({ from: currentUser(), to: "opettaja", body, recipient: document.getElementById("chat-kenelle").value.trim() || null, threadId: null });
+          const msgs = readJson(KEYS.messages, []);
+          msgs.push({ id: id(), from: user(), to: "opettaja", who: clean($("chatWho").value), body: clean($("chatBody").value), threadId: null, at: new Date().toISOString() });
+          writeJson(KEYS.messages, msgs);
           render();
         });
       }
 
       function bindTeacherGate() {
-        document.getElementById("form-teacher-code")?.addEventListener("submit", (e) => {
+        $("teacherForm")?.addEventListener("submit", (e) => {
           e.preventDefault();
-          const err = document.getElementById("teacher-err");
-          if (document.getElementById("teacher-code").value.trim() !== OPETTAJAN_KOODI) {
-            err.textContent = "Väärä salasana.";
-            err.hidden = false;
-            return;
-          }
-          teacherUnlocked = true;
-          saveTeacherUnlocked(true);
+          if ($("teacherCode").value.trim() !== TEACHER_CODE) return show("teacherErr", "Väärä salasana.");
+          write(KEYS.teacher, "1");
           render();
         });
       }
 
-      function bindTeacherDashboard() {
-        document.getElementById("teacher-lock")?.addEventListener("click", () => {
-          teacherUnlocked = false;
-          saveTeacherUnlocked(false);
+      function bindTeacher() {
+        $("teacherClose")?.addEventListener("click", () => {
+          write(KEYS.teacher, "");
           render();
         });
-        document.getElementById("teacher-msg-list")?.addEventListener("click", (e) => {
-          const del = e.target.closest(".btn-delete-teacher");
-          const reply = e.target.closest(".btn-reply");
+        $("teacherList")?.addEventListener("click", (e) => {
+          const del = e.target.closest(".del");
+          const reply = e.target.closest(".reply");
           if (del) {
-            if (confirm("Poistetaanko viesti?")) {
-              del.dataset.delete === "thread" ? deleteThreadStartingAt(del.dataset.id) : deleteMessageById(del.dataset.id);
-              render();
-            }
+            writeJson(KEYS.messages, readJson(KEYS.messages, []).filter((m) => m.id !== del.dataset.id && m.threadId !== del.dataset.id));
+            render();
           }
           if (reply) {
-            const msg = getMessageById(reply.dataset.id);
-            document.getElementById("reply-to-id").value = reply.dataset.id;
-            document.getElementById("reply-context").innerHTML = `Vastaat käyttäjälle <strong>${esc(msg?.from || "")}</strong>`;
-            document.getElementById("teacher-reply-panel").hidden = false;
-            document.getElementById("teacher-reply-panel").scrollIntoView({ behavior: "smooth" });
+            $("replyId").value = reply.dataset.id;
+            $("replyPanel").hidden = false;
+            $("replyPanel").scrollIntoView({ behavior: "smooth" });
           }
         });
-        document.getElementById("form-teacher-reply")?.addEventListener("submit", (e) => {
+        $("replyForm")?.addEventListener("submit", (e) => {
           e.preventDefault();
-          const id = document.getElementById("reply-to-id").value;
-          const body = document.getElementById("reply-body").value.trim();
-          if (!id || !body) return;
-          addMessage({ from: "Opettaja", to: "opettaja", body, threadId: id, recipient: null });
+          const msgs = readJson(KEYS.messages, []);
+          msgs.push({ id: id(), from: "Opettaja", to: "oppilas", body: clean($("replyText").value), threadId: $("replyId").value, at: new Date().toISOString() });
+          writeJson(KEYS.messages, msgs);
           render();
         });
       }
 
-      function mountGame(root, subject, grade) {
-        const title = `${subject.label} · ${grade}`;
+      function show(id, text) {
+        const el = $(id);
+        el.textContent = text;
+        el.hidden = false;
+      }
+
+      function startGame(subjectId, grade) {
+        const box = $("game");
+        const s = subjectById(subjectId);
         const g = gradeNum(grade);
-        const state = { score: 0, round: 0 };
-        root.innerHTML = `<div class="game-top"><strong>${esc(title)}</strong><span class="pill">${esc(gameTypeLabel(subject.type))}</span></div><div class="game-board" id="game-board"></div>`;
-        const board = document.getElementById("game-board");
-
-        const quizzes = {
-          matematiikka: mathQuestions(g),
-          englanti: [
-            ["dog", "koira", ["kissa", "koira", "lintu"]],
-            ["school", "koulu", ["kirja", "koulu", "koti"]],
-            ["quick", "nopea", ["hidas", "nopea", "uusi"]],
-          ],
-          espanja: [
-            ["Hola", "Hei", ["Hei", "Kiitos", "Vesi"]],
-            ["Gracias", "Kiitos", ["Anteeksi", "Kiitos", "Kirja"]],
-            ["Agua", "Vesi", ["Talo", "Vesi", "Ystävä"]],
-          ],
-          saksa: [
-            ["der Hund", "koira", ["koira", "koulu", "vesi"]],
-            ["die Schule", "koulu", ["kirja", "koulu", "auto"]],
-            ["das Wasser", "vesi", ["vesi", "talo", "ystävä"]],
-          ],
-        };
-
-        if (["quiz", "listen", "phrase", "case", "foodweb", "map", "force", "lab", "rhythm", "color", "movement", "budget"].includes(subject.type)) {
-          const bank = customQuestions(subject.id, g, quizzes);
-          runQuiz(board, bank, state);
-        } else if (subject.type === "word") {
-          runWordGame(board, g);
-        } else if (subject.type === "memory") {
-          runMemory(board, subject.id, g);
-        } else if (subject.type === "timeline") {
-          runTimeline(board, g);
-        } else if (subject.type === "sort") {
-          runSort(board, g);
-        }
+        if (!box || !s) return;
+        if (subjectId === "suomenkieli") return wordGame(box, g);
+        if (subjectId === "ruotsinkieli") return memoryGame(box);
+        if (subjectId === "historia") return timelineGame(box);
+        if (subjectId === "ymparistooppi") return sortGame(box);
+        quizGame(box, questions(subjectId, g), s[1]);
       }
 
-      function mathQuestions(g) {
-        const rows = [];
+      function questions(subjectId, g) {
+        const math = [];
         for (let i = 0; i < Math.min(4 + g, 8); i++) {
-          const a = g * 2 + i + 1;
-          const b = g + i + 2;
-          const ok = g <= 2 ? a + b : g <= 4 ? a * b : (a + b) * 2;
-          const q = g <= 2 ? `${a} + ${b} = ?` : g <= 4 ? `${a} x ${b} = ?` : `(${a} + ${b}) x 2 = ?`;
-          rows.push([q, String(ok), shuffle([String(ok), String(ok + g), String(Math.max(1, ok - 2))])]);
+          const a = g + i + 2;
+          const b = i + 3;
+          const ok = g <= 2 ? a + b : a * b;
+          math.push([g <= 2 ? `${a} + ${b} = ?` : `${a} x ${b} = ?`, String(ok), [String(ok), String(ok + 2), String(Math.max(1, ok - 1))]]);
         }
-        return rows;
-      }
-
-      function customQuestions(id, g, base) {
-        const data = {
-          biologia: [["Mikä tuottaa ravintoverkon energian alun?", "kasvi", ["kasvi", "kettu", "sieni"]], ["Mikä hajottaa kuollutta ainesta?", "hajottaja", ["peto", "hajottaja", "saalis"]], ["Mikä kuluttaa kasveja?", "kasvinsyöjä", ["kasvinsyöjä", "tuottaja", "kivi"]]],
-          maantieto: [["Mitä kartan mittakaava kertoo?", "etäisyyden suhteen", ["värin", "etäisyyden suhteen", "sään"]], ["Pohjoinen on kartassa usein...", "ylhäällä", ["alhaalla", "ylhäällä", "aina vasemmalla"]], ["Mikä kuvaa korkeuseroja?", "korkeuskäyrä", ["korkeuskäyrä", "otsikko", "kompassi"]]],
-          fysiikka: [["Mikä voima vetää esineitä Maata kohti?", "painovoima", ["kitka", "painovoima", "noste"]], ["Mikä hidastaa liukumista?", "kitka", ["valo", "kitka", "ääni"]], ["Mitä yksikköä käytetään voimalle?", "newton", ["metri", "newton", "litra"]]],
-          kemia: [["Mitä suojalaseilla suojataan?", "silmiä", ["käsiä", "silmiä", "kenkiä"]], ["Mikä on turvallinen tapa haistaa aine?", "leyhytetään varovasti", ["suoraan purkista", "leyhytetään varovasti", "ei koskaan kysytä"]], ["Vesi on kemiallisesti...", "H2O", ["CO2", "H2O", "O2"]]],
-          musiikki: [["Mikä merkki tarkoittaa taukoa?", "taukomerkki", ["nuottiavain", "taukomerkki", "tahtiviiva"]], ["Rytmi kertoo...", "keston ja sykkeen", ["värin", "keston ja sykkeen", "karttamerkin"]], ["Mikä on korkea ääni?", "diskantti", ["basso", "diskantti", "hiljaisuus"]]],
-          kuvataide: [["Sininen + keltainen =", "vihreä", ["violetti", "vihreä", "oranssi"]], ["Punainen + sininen =", "violetti", ["violetti", "ruskea", "harmaa"]], ["Valon ja varjon käyttö auttaa kuvaamaan...", "muotoa", ["ääntä", "muotoa", "lämpöä"]]],
-          liikunta: [["Mikä kuuluu hyvään alkuun ennen liikuntaa?", "lämmittely", ["lämmittely", "ruutuaika", "paikallaan seisominen"]], ["Miksi juodaan vettä liikkuessa?", "nestetasapaino", ["kartta", "nestetasapaino", "värisekoitus"]], ["Reilu peli tarkoittaa...", "sääntöjen ja muiden kunnioittamista", ["voittoa hinnalla millä hyvänsä", "sääntöjen ja muiden kunnioittamista", "hiljaisuutta"]]],
-          yhteiskuntaoppi: [["Budjetti tarkoittaa...", "tulojen ja menojen suunnitelmaa", ["karttaa", "tulojen ja menojen suunnitelmaa", "sääennustetta"]], ["Veroilla rahoitetaan esimerkiksi...", "kouluja", ["kouluja", "salasanoja", "pilviä"]], ["Äänestäminen on osa...", "demokratiaa", ["demokratiaa", "kertolaskua", "kierrätystä"]]],
+        const banks = {
+          matematiikka: math,
+          englanti: [["school tarkoittaa", "koulu", ["koulu", "auto", "vesi"]], ["friend tarkoittaa", "ystävä", ["talo", "ystävä", "kirja"]]],
+          espanja: [["Hola tarkoittaa", "hei", ["kiitos", "hei", "vesi"]], ["Agua tarkoittaa", "vesi", ["vesi", "kirja", "talo"]]],
+          saksa: [["Schule tarkoittaa", "koulu", ["koulu", "auto", "koira"]], ["Danke tarkoittaa", "kiitos", ["hei", "kiitos", "vesi"]]],
+          biologia: [["Mikä aloittaa ravintoketjun energian?", "kasvi", ["kasvi", "kettu", "kivi"]], ["Mikä hajottaa kuollutta ainesta?", "hajottaja", ["hajottaja", "peto", "pilvi"]]],
+          maantieto: [["Mitä kompassi näyttää?", "ilmansuunnat", ["ilmansuunnat", "lämpötilan", "ajan"]], ["Mikä kuvaa kartan etäisyyksiä?", "mittakaava", ["mittakaava", "otsikko", "väri"]]],
+          fysiikka: [["Mikä vetää alas Maata kohti?", "painovoima", ["kitka", "painovoima", "valo"]], ["Mikä hidastaa liukumista?", "kitka", ["kitka", "ääni", "sähkö"]]],
+          kemia: [["Mitä suojalasit suojaavat?", "silmiä", ["silmiä", "kenkiä", "vihkoa"]], ["Veden kemiallinen merkki on", "H2O", ["CO2", "H2O", "O2"]]],
+          musiikki: [["Rytmi kertoo", "keston ja sykkeen", ["keston ja sykkeen", "värin", "karttamerkin"]], ["Basso on yleensä", "matala ääni", ["matala ääni", "korkea ääni", "tauko"]]],
+          kuvataide: [["Sininen + keltainen =", "vihreä", ["vihreä", "violetti", "punainen"]], ["Punainen + sininen =", "violetti", ["violetti", "oranssi", "valkoinen"]]],
+          liikunta: [["Ennen liikuntaa tehdään usein", "lämmittely", ["lämmittely", "koe", "kartta"]], ["Reilu peli tarkoittaa", "sääntöjen kunnioittamista", ["sääntöjen kunnioittamista", "huijaamista", "poistumista"]]],
+          yhteiskuntaoppi: [["Budjetti on", "tulojen ja menojen suunnitelma", ["sääennuste", "tulojen ja menojen suunnitelma", "kartta"]], ["Demokratiaan kuuluu", "äänestäminen", ["äänestäminen", "kertolasku", "kierrätys"]]],
         };
-        return base[id] || data[id] || [["Mikä on paras tapa oppia?", "harjoitella", ["arvata", "harjoitella", "luovuttaa"]]];
+        return banks[subjectId] || banks.englanti;
       }
 
-      function runQuiz(board, rows, state) {
-        const row = rows[state.round];
-        if (!row) {
-          board.innerHTML = `<h2>Valmis!</h2><p>Pisteet: ${state.score} / ${rows.length}</p><button class="btn" type="button" onclick="render()">Takaisin</button>`;
-          return;
-        }
-        const [question, correct, options] = row;
-        board.innerHTML = `<p class="hint">Kierros ${state.round + 1}/${rows.length}</p><h2>${esc(question)}</h2><div class="answers">${shuffle(options).map((o) => `<button class="answer-card" type="button" data-answer="${esc(o)}">${esc(o)}</button>`).join("")}</div><p class="hint">Pisteet: ${state.score}</p>`;
-        board.querySelectorAll("[data-answer]").forEach((btn) => {
-          btn.addEventListener("click", () => {
-            const ok = String(btn.dataset.answer) === String(correct);
-            btn.classList.add(ok ? "good" : "bad");
-            if (ok) state.score++;
-            setTimeout(() => {
-              state.round++;
-              runQuiz(board, rows, state);
-            }, 420);
-          });
-        });
+      function quizGame(box, rows, title) {
+        let i = 0;
+        let score = 0;
+        const draw = () => {
+          const row = rows[i];
+          if (!row) {
+            box.innerHTML = `<h2>Valmis!</h2><p>${esc(title)}: ${score} / ${rows.length} oikein.</p>`;
+            return;
+          }
+          const [q, ok, opts] = row;
+          box.innerHTML = `<p class="hint">Kysymys ${i + 1}/${rows.length}</p><h2>${esc(q)}</h2><div class="answers">${shuffle(opts).map((o) => `<button class="answer" data-a="${esc(o)}">${esc(o)}</button>`).join("")}</div><p class="hint">Pisteet: ${score}</p>`;
+          box.querySelectorAll(".answer").forEach((b) => b.addEventListener("click", () => {
+            const correct = b.dataset.a === ok;
+            b.classList.add(correct ? "good" : "bad");
+            if (correct) score++;
+            setTimeout(() => { i++; draw(); }, 450);
+          }));
+        };
+        draw();
       }
 
-      function runWordGame(board, g) {
-        const words = g <= 2 ? ["KALA", "TALO", "PILVI"] : g <= 4 ? ["KIRJASTO", "TARINA", "LAUSE"] : ["PERSOONA", "METAFORA", "ARGUMENTTI"];
-        const word = words[Math.floor(Math.random() * words.length)];
+      function wordGame(box, g) {
+        const word = (g <= 2 ? "KALA" : g <= 4 ? "TARINA" : "ARGUMENTTI");
         const letters = shuffle(word.split(""));
         let chosen = [];
         let used = new Set();
-        let message = "";
-        function draw() {
-          board.innerHTML = `<h2>Rakenna sana</h2><p class="hint">Klikkaa kirjaimet oikeaan järjestykseen.</p><div class="word-slots">${word.split("").map((_, i) => `<span class="word-slot">${esc(chosen[i] || "")}</span>`).join("")}</div><div class="pill-row">${letters.map((ch, i) => `<button class="btn btn-secondary letter" data-i="${i}" type="button" ${used.has(i) ? "disabled" : ""}>${esc(ch)}</button>`).join("")}</div><p class="hint">${esc(message)}</p><button class="btn btn-secondary" id="word-reset" type="button">Aloita sana uudelleen</button>`;
-          board.querySelectorAll(".letter").forEach((btn) => btn.addEventListener("click", () => {
-            const i = Number(btn.dataset.i);
-            used.add(i);
+        const draw = (msg = "") => {
+          box.innerHTML = `<h2>Rakenna sana</h2><div class="slots">${word.split("").map((_, i) => `<span class="slot">${esc(chosen[i] || "")}</span>`).join("")}</div><div class="chips">${letters.map((l, i) => `<button class="chip" data-i="${i}" ${used.has(i) ? "disabled" : ""}>${esc(l)}</button>`).join("")}</div><p class="hint">${esc(msg)}</p>`;
+          box.querySelectorAll(".chip").forEach((b) => b.addEventListener("click", () => {
+            const i = Number(b.dataset.i);
             chosen.push(letters[i]);
-            if (chosen.length === word.length) message = chosen.join("") === word ? "Oikein!" : `Ei vielä. Sana oli ${word}.`;
-            draw();
+            used.add(i);
+            draw(chosen.length === word.length ? (chosen.join("") === word ? "Oikein!" : `Sana oli ${word}.`) : "");
           }));
-          document.getElementById("word-reset").addEventListener("click", () => {
-            chosen = [];
-            used = new Set();
-            message = "";
-            draw();
-          });
-        }
+        };
         draw();
       }
 
-      function runMemory(board, id, g) {
-        const pools = {
-          ruotsinkieli: [["hus", "talo"], ["bil", "auto"], ["skola", "koulu"], ["vän", "ystävä"], ["vatten", "vesi"], ["bok", "kirja"]],
-        };
-        const pairs = shuffle(pools[id] || pools.ruotsinkieli).slice(0, Math.min(3 + Math.ceil(g / 2), 6));
-        const cards = shuffle(pairs.flatMap((p, i) => [{ key: i, text: p[0] }, { key: i, text: p[1] }]));
+      function memoryGame(box) {
+        const pairs = [["hus", "talo"], ["bil", "auto"], ["skola", "koulu"], ["bok", "kirja"]];
+        const cards = shuffle(pairs.flatMap((p, i) => [{ k: i, t: p[0] }, { k: i, t: p[1] }]));
         let open = [];
         const done = new Set();
-        function draw() {
-          board.innerHTML = `<h2>Muistipeli</h2><p class="hint">Etsi sanaparit.</p><div class="memory-grid">${cards.map((c, i) => `<button class="memory-card ${done.has(c.key) ? "done" : ""}" data-i="${i}" type="button">${open.includes(i) || done.has(c.key) ? esc(c.text) : "?"}</button>`).join("")}</div>`;
-          board.querySelectorAll(".memory-card").forEach((btn) => btn.addEventListener("click", () => {
-            const i = Number(btn.dataset.i);
-            if (done.has(cards[i].key) || open.includes(i)) return;
+        const draw = () => {
+          box.innerHTML = `<h2>Muistipeli</h2><div class="answers">${cards.map((c, i) => `<button class="answer" data-i="${i}">${open.includes(i) || done.has(c.k) ? esc(c.t) : "?"}</button>`).join("")}</div>`;
+          box.querySelectorAll(".answer").forEach((b) => b.addEventListener("click", () => {
+            const i = Number(b.dataset.i);
+            if (open.includes(i) || done.has(cards[i].k)) return;
             open.push(i);
             if (open.length === 2) {
-              if (cards[open[0]].key === cards[open[1]].key) done.add(cards[i].key);
-              setTimeout(() => { open = []; draw(); }, 550);
+              if (cards[open[0]].k === cards[open[1]].k) done.add(cards[i].k);
+              setTimeout(() => { open = []; draw(); }, 600);
             }
             draw();
           }));
-        }
+        };
         draw();
       }
 
-      function runTimeline(board, g) {
-        const original = [
-          "Kivikausi Suomen alueella",
-          "Suomi osana Ruotsia",
-          "Suomen suuriruhtinaskunta",
-          "Suomen itsenäisyys",
-          "Peruskoulu-uudistus",
-        ].slice(0, g <= 3 ? 3 : 5);
-        let order = shuffle(original);
-        function draw(msg = "") {
-          board.innerHTML = `<h2>Järjestä aikajana</h2><p class="hint">Siirrä tapahtumia ylös ja alas.</p><div class="sort-list">${order.map((item, i) => `<div class="sort-item"><span>${i + 1}. ${esc(item)}</span><span><button class="btn btn-secondary up" data-i="${i}" type="button">Ylös</button> <button class="btn btn-secondary down" data-i="${i}" type="button">Alas</button></span></div>`).join("")}</div><button class="btn" id="check-order" type="button">Tarkista</button><p class="hint">${esc(msg)}</p>`;
-          board.querySelectorAll(".up").forEach((btn) => btn.addEventListener("click", () => { const i = Number(btn.dataset.i); if (i > 0) [order[i - 1], order[i]] = [order[i], order[i - 1]]; draw(); }));
-          board.querySelectorAll(".down").forEach((btn) => btn.addEventListener("click", () => { const i = Number(btn.dataset.i); if (i < order.length - 1) [order[i + 1], order[i]] = [order[i], order[i + 1]]; draw(); }));
-          document.getElementById("check-order").addEventListener("click", () => draw(order.every((x, i) => x === original[i]) ? "Oikein!" : "Kokeile vielä."));
-        }
+      function timelineGame(box) {
+        const correct = ["Kivikausi", "Ruotsin aika", "Venäjän aika", "Itsenäisyys"];
+        let rows = shuffle(correct);
+        const draw = (msg = "") => {
+          box.innerHTML = `<h2>Aikajana</h2>${rows.map((r, i) => `<div class="row"><span>${i + 1}. ${esc(r)}</span><span><button class="btn secondary up" data-i="${i}">Ylös</button> <button class="btn secondary down" data-i="${i}">Alas</button></span></div>`).join("")}<button id="check" class="btn">Tarkista</button><p class="hint">${esc(msg)}</p>`;
+          box.querySelectorAll(".up").forEach((b) => b.addEventListener("click", () => { const i = Number(b.dataset.i); if (i > 0) [rows[i - 1], rows[i]] = [rows[i], rows[i - 1]]; draw(); }));
+          box.querySelectorAll(".down").forEach((b) => b.addEventListener("click", () => { const i = Number(b.dataset.i); if (i < rows.length - 1) [rows[i + 1], rows[i]] = [rows[i], rows[i + 1]]; draw(); }));
+          $("check").addEventListener("click", () => draw(rows.every((r, i) => r === correct[i]) ? "Oikein!" : "Kokeile vielä."));
+        };
         draw();
       }
 
-      function runSort(board, g) {
-        const items = [
-          ["Banaaninkuori", "Biojäte"],
-          ["Sanomalehti", "Paperi"],
-          ["Muovipurkki", "Muovi"],
-          ["Paristo", "Vaarallinen jäte"],
-        ].slice(0, g <= 3 ? 3 : 4);
-        let score = 0;
+      function sortGame(box) {
+        const rows = [["Banaaninkuori", "Biojäte"], ["Sanomalehti", "Paperi"], ["Muovipurkki", "Muovi"], ["Paristo", "Vaarallinen jäte"]];
         let i = 0;
-        function draw() {
-          if (!items[i]) {
-            board.innerHTML = `<h2>Valmis!</h2><p>Pisteet: ${score} / ${items.length}</p>`;
+        let score = 0;
+        const draw = () => {
+          const row = rows[i];
+          if (!row) {
+            box.innerHTML = `<h2>Valmis!</h2><p>${score} / ${rows.length} oikein.</p>`;
             return;
           }
-          const [item, correct] = items[i];
-          const opts = shuffle(["Biojäte", "Paperi", "Muovi", "Vaarallinen jäte"]);
-          board.innerHTML = `<h2>Mihin kuuluu: ${esc(item)}?</h2><div class="answers">${opts.map((o) => `<button class="answer-card" data-bin="${esc(o)}" type="button">${esc(o)}</button>`).join("")}</div><p class="hint">Pisteet: ${score}</p>`;
-          board.querySelectorAll("[data-bin]").forEach((btn) => btn.addEventListener("click", () => {
-            if (btn.dataset.bin === correct) score++;
+          box.innerHTML = `<h2>Mihin kuuluu: ${esc(row[0])}?</h2><div class="answers">${shuffle(rows.map((r) => r[1])).map((o) => `<button class="answer" data-a="${esc(o)}">${esc(o)}</button>`).join("")}</div>`;
+          box.querySelectorAll(".answer").forEach((b) => b.addEventListener("click", () => {
+            if (b.dataset.a === row[1]) score++;
             i++;
             draw();
           }));
-        }
+        };
         draw();
       }
 
